@@ -52,7 +52,14 @@
   function setEnd(win){state='end';ui.hud.classList.add('hidden');ui.caption.classList.add('hidden');ui.end.classList.remove('hidden');$('endKicker').textContent=win?'TRANSMISIÓN ENVIADA // 2189':'REGISTRO DE BAJA // NÁYADE';$('endTitle').innerHTML=win?'LA SEÑAL<br><em>SIGUE VIVA.</em>':'EL VACÍO<br><em>TE RECLAMA.</em>'; $('endText').textContent=win?'La cápsula se aleja de NÁYADE. En la grabación, algo golpea desde dentro del núcleo que rescataste. La señal de socorro nunca fue para pedir ayuda.':'La estación guarda silencio otra vez. Pero en algún lugar, bajo el hielo de Europa, algo acaba de aprender tu nombre.';sound(win?420:80,.5,'sawtooth',.04);}
   function restart(){location.reload();}
   function pauseGame(){if(state==='playing'){state='paused';ui.pause.classList.remove('hidden')}else if(state==='paused'){$('resumeButton').click()}}
-  $('startButton').addEventListener('click',begin);$('skipCinematic').addEventListener('click',finishCinematic);$('briefContinue').addEventListener('click',enterGame);ui.brief.addEventListener('pointerup',e=>{if(state==='brief'&&(e.pointerType==='touch'||window.matchMedia('(pointer: coarse)').matches))enterGame()});$('resumeButton').addEventListener('click',()=>{state='playing';ui.pause.classList.add('hidden');last=performance.now()});$('restartButton').addEventListener('click',restart);
+  $('startButton').addEventListener('click',begin);
+  $('skipCinematic').addEventListener('click',finishCinematic);
+  $('skipCinematic').addEventListener('pointerup',finishCinematic);
+  $('briefContinue').addEventListener('click',enterGame);
+  ui.brief.addEventListener('pointerup',()=>{if(state==='brief')enterGame()});
+  ui.brief.addEventListener('click',()=>{if(state==='brief')enterGame()});
+  $('resumeButton').addEventListener('click',()=>{state='playing';ui.pause.classList.add('hidden');last=performance.now()});
+  $('restartButton').addEventListener('click',restart);
   window.addEventListener('keydown',e=>{const k=e.key.toLowerCase();input.keys.add(k);if([' ','arrowup','arrowdown','arrowleft','arrowright'].includes(k))e.preventDefault();if(k==='escape')pauseGame();if(k==='e'&&state==='playing')interact();if(k==='q'&&state==='playing')useMed();if(k==='r'&&state==='playing'&&player.ammo<12)reload();});
   window.addEventListener('keyup',e=>input.keys.delete(e.key.toLowerCase()));window.addEventListener('blur',()=>{input.keys.clear();input.touch.clear();input.mouse.down=false;input.mobileFire=false});
   canvas.addEventListener('pointermove',e=>{const r=canvas.getBoundingClientRect();input.mouse.x=(e.clientX-r.left)/r.width*W;input.mouse.y=(e.clientY-r.top)/r.height*H;ui.aim.style.left=`${e.clientX-r.left}px`;ui.aim.style.top=`${e.clientY-r.top}px`});
