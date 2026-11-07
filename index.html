@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+  <meta name="theme-color" content="#070b11" />
+  <link rel="icon" type="image/svg+xml" href="favicon.svg" />
+  <title>UMBRA — Señal perdida</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="game-shell">
+    <canvas id="game" aria-label="Juego UMBRA: Señal perdida"></canvas>
+    <div class="scanlines" aria-hidden="true"></div>
+    <section class="screen title-screen" id="titleScreen">
+      <div class="title-top"><span class="brand-mark">U<span>·</span></span><span>ARCHIVO DE MISIÓN <b>07—19—A</b></span></div>
+      <div class="title-copy">
+        <p class="eyebrow"><i></i> TRANSMISIÓN RECUPERADA // 2189</p>
+        <h1>UMBRA<span>:</span><br><em>SEÑAL PERDIDA</em></h1>
+        <p class="title-desc">La última voz de la estación NÁYADE no pidió ayuda.<br>Pidió que no la encontráramos.</p>
+        <button class="primary-button" id="startButton"><span>INICIAR PROTOCOLO</span><b>↗</b></button>
+        <div class="title-hint">UNA EXPERIENCIA DE SUPERVIVENCIA // 12–15 MIN</div>
+      </div>
+      <div class="title-bottom"><span>SECTOR HELIX · ÓRBITA DE EUROPA</span><span>NO HAY RESCATE EN CAMINO <i>●</i></span></div>
+    </section>
+    <section class="screen briefing hidden" id="briefing">
+      <div class="brief-card">
+        <div class="brief-kicker">REGISTRO DE VUELO <span>01 / 04</span></div>
+        <div class="brief-line"></div>
+        <p class="eyebrow">NÁYADE // 03:17 UTC</p>
+        <h2>EL SILENCIO<br><em>NO ESTABA VACÍO.</em></h2>
+        <p class="brief-text">La estación científica dejó de transmitir hace 36 horas. Eres la especialista <strong>Vera Solís</strong>, enviada a recuperar el núcleo de navegación antes de que la órbita decaiga.</p>
+        <p class="brief-text dim">Algo llegó adherido al hielo de la sonda <i>Orfeo</i>. No estaba vivo… hasta que la tripulación intentó calentarlo.</p>
+        <button class="text-button" id="briefContinue">ABRIR ESCLUSA <span>→</span></button>
+      </div>
+      <div class="brief-aside"><span class="crosshair">＋</span><span>ARCHIVO CLASIFICADO<br>UMBRA / NIVEL 4</span></div>
+    </section>
+    <div class="hud hidden" id="hud">
+      <div class="hud-top">
+        <div class="hud-brand"><span class="mini-mark">U</span><div><b>NÁYADE</b><small>ESTACIÓN CIENTÍFICA // 2189</small></div></div>
+        <div class="objective"><small>OBJETIVO ACTUAL</small><b id="objectiveText">RESTAURA LA ENERGÍA</b></div>
+        <div class="sector"><small>SECTOR</small><b id="sectorText">ESCLUSA 01</b></div>
+      </div>
+      <div class="hud-bottom">
+        <div class="vitals"><span class="hud-label">INTEGRIDAD</span><div class="health-track"><i id="healthBar"></i></div><b id="healthValue">100</b></div>
+        <div class="ammo"><span class="ammo-icon">▣</span><b id="ammoValue">12</b><small>/ <span id="reserveValue">48</span></small><span class="hud-label">PULSO</span></div>
+        <div class="collectibles"><span class="hud-label">NÚCLEOS</span><b id="coreCount">0</b><span>/ 3</span></div>
+        <div class="medkits"><span class="hud-label">BOTIQUÍN</span><b id="medCount">1</b><span>[Q]</span></div>
+      </div>
+      <div class="crosshair-ui" id="aimDot"></div>
+      <div class="toast" id="toast"></div>
+      <div class="interact-prompt hidden" id="interactPrompt"><kbd>E</kbd><span>INTERACTUAR</span></div>
+      <div class="controls-hint" id="controlsHint"><span>A/D</span> MOVER <span>W/ESPACIO</span> SALTAR <span>RATÓN</span> APUNTAR <span>CLICK</span> DISPARAR <span>E</span> USAR</div>
+    </div>
+    <div class="story-caption hidden" id="caption"><div class="caption-speaker" id="captionSpeaker">VERA SOLÍS <span>// TRAJE</span></div><p id="captionText"></p><div class="caption-progress"><i></i></div></div>
+    <div class="pause-screen screen hidden" id="pauseScreen"><div class="pause-card"><p class="eyebrow">UMBRA // PAUSA</p><h2>RESPIRA.<br><em>SI PUEDES.</em></h2><p>La estación sigue ahí cuando vuelvas.</p><button class="primary-button" id="resumeButton"><span>CONTINUAR</span><b>→</b></button><div class="pause-controls">A/D O FLECHAS · MOVER &nbsp; W/ESPACIO · SALTAR<br>RATÓN / CLICK · APUNTAR Y DISPARAR &nbsp; R · RECARGAR<br>E · INTERACTUAR &nbsp; Q · BOTIQUÍN &nbsp; ESC · PAUSA</div></div></div>
+    <div class="end-screen screen hidden" id="endScreen"><div class="end-card"><p class="eyebrow" id="endKicker">REGISTRO FINAL</p><h2 id="endTitle">LA SEÑAL<br><em>SIGUE VIVA.</em></h2><p id="endText"></p><button class="primary-button" id="restartButton"><span>VOLVER A INTENTAR</span><b>↻</b></button></div></div>
+    <div class="mobile-controls hidden" id="mobileControls"><div class="dpad"><button data-key="up">▲</button><div><button data-key="left">◀</button><button data-key="down">▼</button><button data-key="right">▶</button></div></div><div class="mobile-actions"><button id="mobileFire">FUEGO</button><button id="mobileUse">USAR</button></div></div>
+  </main>
+  <script src="game.js"></script>
+</body>
+</html>
