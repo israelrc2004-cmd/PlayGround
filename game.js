@@ -7,7 +7,8 @@
   const $ = id => document.getElementById(id);
   const ui = {title:$('titleScreen'),brief:$('briefing'),hud:$('hud'),pause:$('pauseScreen'),end:$('endScreen'),caption:$('caption'),prompt:$('interactPrompt'),toast:$('toast'),objective:$('objectiveText'),sector:$('sectorText'),health:$('healthBar'),healthValue:$('healthValue'),ammo:$('ammoValue'),reserve:$('reserveValue'),cores:$('coreCount'),med:$('medCount'),speaker:$('captionSpeaker'),captionText:$('captionText'),progress:document.querySelector('.caption-progress i'), mobile:$('mobileControls'),aim:$('aimDot')};
   const input={keys:new Set(),mouse:{x:W*.65,y:H*.5,down:false},touch:new Set(),mobileFire:false};
-  let state='title', last=0, time=0, cam=0, toastTimer=0, captionTimer=0, shotCooldown=0, spawnTimer=0, screenShake=0, muted=false;
+  let state='title', last=0, time=0, cam=0, toastTimer=0, captionTimer=0, shotCooldown=0, spawnTimer=0, screenShake=0, muted=false, cinematicTimer=0;
+  const cinematicDuration=window.matchMedia('(prefers-reduced-motion: reduce)').matches?12000:42000;
   const player={x:120,y:FLOOR-62,vx:0,vy:0,w:34,h:62,hp:100,ammo:12,reserve:48,med:1,facing:1,grounded:true,invuln:0,flash:0};
   const terminals=[{x:520,type:'relay',used:false,label:'RELÉ DE ENERGÍA',sector:'ESCLUSA 01'},{x:1460,type:'core',used:false,label:'NÚCLEO DE DATOS A',sector:'LABORATORIO'},{x:2460,type:'core',used:false,label:'NÚCLEO DE DATOS B',sector:'CRIOGENIA'},{x:3350,type:'core',used:false,label:'NÚCLEO DE DATOS C',sector:'HABITÁCULOS'},{x:4050,type:'exit',used:false,label:'CÁPSULA DE ESCAPE',sector:'ESCLUSA 04'}];
   const enemies=[],bullets=[],enemyShots=[],particles=[],pickups=[];
@@ -19,12 +20,34 @@
   function showToast(text,duration=2500){ui.toast.textContent=text;ui.toast.classList.add('show');toastTimer=duration;}
   function caption(speaker,text,duration=4800){ui.speaker.innerHTML=`${speaker} <span>// ${speaker==='VERA SOLÍS'?'TRAJE':'REGISTRO'}</span>`;ui.captionText.textContent=text;ui.caption.classList.remove('hidden');ui.progress.style.transition='none';ui.progress.style.width='0';requestAnimationFrame(()=>{ui.progress.style.transition=`width ${duration}ms linear`;ui.progress.style.width='100%'});captionTimer=duration;}
   function hideCaption(){ui.caption.classList.add('hidden');}
-  function begin(){state='brief';ui.title.classList.add('hidden');ui.brief.classList.remove('hidden'); sound(110,.2,'sine');}
-  function enterGame(){state='playing';ui.brief.classList.add('hidden');ui.hud.classList.remove('hidden');const touchDevice=navigator.maxTouchPoints>0||window.matchMedia('(pointer: coarse)').matches;ui.mobile.classList.toggle('hidden',!touchDevice);caption('VERA SOLÍS','Control, estoy dentro. La estación está… congelada. No veo señales térmicas.');showToast('OBJETIVO ACTUALIZADO  //  RESTAURA LA ENERGÍA');}
+  function begin(){
+    if(state!=='title')return;
+    state='cinematic';
+    const intro=$('introCinematic');
+    ui.title.classList.add('is-fading');
+    intro.classList.remove('hidden','is-fading');
+    requestAnimationFrame(()=>intro.classList.add('is-visible'));
+    setTimeout(()=>ui.title.classList.add('hidden'),900);
+    cinematicTimer=setTimeout(finishCinematic,cinematicDuration);
+    sound(110,.2,'sine');
+  }
+  function finishCinematic(){
+    if(state!=='cinematic')return;
+    state='brief';
+    clearTimeout(cinematicTimer);
+    const intro=$('introCinematic');
+    intro.classList.remove('is-visible');
+    intro.classList.add('is-fading');
+    ui.brief.classList.remove('hidden');
+    ui.brief.classList.add('is-fading');
+    requestAnimationFrame(()=>ui.brief.classList.replace('is-fading','is-visible'));
+    setTimeout(()=>{intro.classList.add('hidden');intro.classList.remove('is-fading')},900);
+  }
+  function enterGame(){state='playing';ui.brief.classList.add('hidden');ui.brief.classList.remove('is-visible');ui.hud.classList.remove('hidden');const touchDevice=navigator.maxTouchPoints>0||window.matchMedia('(pointer: coarse)').matches;ui.mobile.classList.toggle('hidden',!touchDevice);caption('VERA SOLÍS','Control, estoy dentro. La estación está… congelada. No veo señales térmicas.');showToast('OBJETIVO ACTUALIZADO  //  RESTAURA LA ENERGÍA');}
   function setEnd(win){state='end';ui.hud.classList.add('hidden');ui.caption.classList.add('hidden');ui.end.classList.remove('hidden');$('endKicker').textContent=win?'TRANSMISIÓN ENVIADA // 2189':'REGISTRO DE BAJA // NÁYADE';$('endTitle').innerHTML=win?'LA SEÑAL<br><em>SIGUE VIVA.</em>':'EL VACÍO<br><em>TE RECLAMA.</em>'; $('endText').textContent=win?'La cápsula se aleja de NÁYADE. En la grabación, algo golpea desde dentro del núcleo que rescataste. La señal de socorro nunca fue para pedir ayuda.':'La estación guarda silencio otra vez. Pero en algún lugar, bajo el hielo de Europa, algo acaba de aprender tu nombre.';sound(win?420:80,.5,'sawtooth',.04);}
   function restart(){location.reload();}
   function pauseGame(){if(state==='playing'){state='paused';ui.pause.classList.remove('hidden')}else if(state==='paused'){$('resumeButton').click()}}
-  $('startButton').addEventListener('click',begin);$('briefContinue').addEventListener('click',enterGame);$('resumeButton').addEventListener('click',()=>{state='playing';ui.pause.classList.add('hidden');last=performance.now()});$('restartButton').addEventListener('click',restart);
+  $('startButton').addEventListener('click',begin);$('skipCinematic').addEventListener('click',finishCinematic);$('briefContinue').addEventListener('click',enterGame);$('resumeButton').addEventListener('click',()=>{state='playing';ui.pause.classList.add('hidden');last=performance.now()});$('restartButton').addEventListener('click',restart);
   window.addEventListener('keydown',e=>{const k=e.key.toLowerCase();input.keys.add(k);if([' ','arrowup','arrowdown','arrowleft','arrowright'].includes(k))e.preventDefault();if(k==='escape')pauseGame();if(k==='e'&&state==='playing')interact();if(k==='q'&&state==='playing')useMed();if(k==='r'&&state==='playing'&&player.ammo<12)reload();});
   window.addEventListener('keyup',e=>input.keys.delete(e.key.toLowerCase()));window.addEventListener('blur',()=>{input.keys.clear();input.touch.clear();input.mouse.down=false;input.mobileFire=false});
   canvas.addEventListener('pointermove',e=>{const r=canvas.getBoundingClientRect();input.mouse.x=(e.clientX-r.left)/r.width*W;input.mouse.y=(e.clientY-r.top)/r.height*H;ui.aim.style.left=`${e.clientX-r.left}px`;ui.aim.style.top=`${e.clientY-r.top}px`});
