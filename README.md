@@ -3,16 +3,16 @@
 <!-- omgithub:readme:start -->
 ## 🚀 Build, play, and remix with OMGithub
 
-**Created using [OMGithub.com](https://omgithub.com).**
+**Created using [OMGithub.com](https://go.ondev.store/).**
 
-[![OMGithub](https://img.shields.io/badge/OMGithub-Open%20project-orange?style=for-the-badge)](https://omgithub.com/israelrc2004-cmd/PlayGround)
+[![OMGithub](https://img.shields.io/badge/OMGithub-Open%20project-orange?style=for-the-badge)](https://go.ondev.store/israelrc2004-cmd/PlayGround)
 [![GitHub](https://img.shields.io/badge/GitHub-Source-181717?logo=github&style=for-the-badge)](https://github.com/israelrc2004-cmd/PlayGround)
 
-- 🎮 [Open the project](https://omgithub.com/israelrc2004-cmd/PlayGround).
-- ✨ [Remix this project](https://omgithub.com/?remix=israelrc2004-cmd%2FPlayGround).
+- 🎮 [Open the project](https://go.ondev.store/israelrc2004-cmd/PlayGround).
+- ✨ [Remix this project](https://go.ondev.store/israelrc2004-cmd/PlayGround?remix=1).
 - 💻 [Explore the source](https://github.com/israelrc2004-cmd/PlayGround).
 - 🛠️ [Check build runs](https://github.com/israelrc2004-cmd/PlayGround/actions).
 - 🐛 [Report an issue](https://github.com/israelrc2004-cmd/PlayGround/issues).
-- 👤 [Explore the creator's projects](https://omgithub.com/israelrc2004-cmd).
-- 🌍 [Create with OMGithub](https://omgithub.com).
+- 👤 [Explore the creator's projects](https://go.ondev.store/israelrc2004-cmd).
+- 🌍 [Create with OMGithub](https://go.ondev.store/).
 <!-- omgithub:readme:end -->
