@@ -25,8 +25,12 @@
   function showToast(text,duration=2500){ui.toast.textContent=text;ui.toast.classList.add('show');toastTimer=duration;}
   function caption(speaker,text,duration=4800){ui.speaker.innerHTML=`${speaker} <span>// ${speaker==='VERA SOLÍS'?'TRAJE':'REGISTRO'}</span>`;ui.captionText.textContent=text;ui.caption.classList.remove('hidden');ui.progress.style.transition='none';ui.progress.style.width='0';requestAnimationFrame(()=>{ui.progress.style.transition=`width ${duration}ms linear`;ui.progress.style.width='100%'});captionTimer=duration;}
   function hideCaption(){ui.caption.classList.add('hidden');}
+  function requestLandscape(){
+    try{if(screen.orientation?.lock)screen.orientation.lock('landscape').catch(()=>{});}catch(e){}
+  }
   function begin(){
     if(state!=='title')return;
+    requestLandscape();
     state='cinematic';
     const intro=$('introCinematic');
     ui.title.classList.add('is-fading');
@@ -43,17 +47,22 @@
     const intro=$('introCinematic');
     intro.classList.remove('is-visible');
     intro.classList.add('is-fading');
-    ui.brief.classList.remove('hidden');
-    ui.brief.classList.add('is-fading');
-    requestAnimationFrame(()=>ui.brief.classList.replace('is-fading','is-visible'));
+    ui.brief.classList.remove('hidden','is-fading');
+    requestAnimationFrame(()=>ui.brief.classList.add('is-visible'));
     setTimeout(()=>{intro.classList.add('hidden');intro.classList.remove('is-fading')},900);
   }
-  function enterGame(){if(state!=='brief')return;state='playing';ui.brief.classList.add('hidden');ui.brief.classList.remove('is-visible');ui.hud.classList.remove('hidden');ui.mobile.classList.toggle('hidden',!touchDevice);caption('VERA SOLÍS','Control, estoy dentro. La estación está… congelada. No veo señales térmicas.');showToast('OBJETIVO ACTUALIZADO  //  RESTAURA LA ENERGÍA');}
+  function enterGame(){if(state!=='brief')return;state='playing';ui.brief.classList.add('hidden');ui.brief.classList.remove('is-visible','is-fading');ui.hud.classList.remove('hidden');ui.mobile.classList.toggle('hidden',!touchDevice);caption('VERA SOLÍS','Control, estoy dentro. La estación está… congelada. No veo señales térmicas.');showToast('OBJETIVO ACTUALIZADO  //  RESTAURA LA ENERGÍA');}
   function setEnd(win){state='end';ui.hud.classList.add('hidden');ui.caption.classList.add('hidden');ui.end.classList.remove('hidden');$('endKicker').textContent=win?'TRANSMISIÓN ENVIADA // 2189':'REGISTRO DE BAJA // NÁYADE';$('endTitle').innerHTML=win?'LA SEÑAL<br><em>SIGUE VIVA.</em>':'EL VACÍO<br><em>TE RECLAMA.</em>'; $('endText').textContent=win?'La cápsula se aleja de NÁYADE. En la grabación, algo golpea desde dentro del núcleo que rescataste. La señal de socorro nunca fue para pedir ayuda.':'La estación guarda silencio otra vez. Pero en algún lugar, bajo el hielo de Europa, algo acaba de aprender tu nombre.';sound(win?420:80,.5,'sawtooth',.04);}
   function restart(){location.reload();}
   function pauseGame(){if(state==='playing'){state='paused';ui.pause.classList.remove('hidden')}else if(state==='paused'){$('resumeButton').click()}}
-  $('startButton').addEventListener('click',begin);$('skipCinematic').addEventListener('click',finishCinematic);$('briefContinue').addEventListener('click',enterGame);ui.brief.addEventListener('pointerup',e=>{if(state==='brief'&&(e.pointerType==='touch'||window.matchMedia('(pointer: coarse)').matches))enterGame()});$('resumeButton').addEventListener('click',()=>{state='playing';ui.pause.classList.add('hidden');last=performance.now()});$('restartButton').addEventListener('click',restart);
-  window.addEventListener('keydown',e=>{const k=e.key.toLowerCase();input.keys.add(k);if([' ','arrowup','arrowdown','arrowleft','arrowright'].includes(k))e.preventDefault();if(k==='escape')pauseGame();if(k==='e'&&state==='playing')interact();if(k==='q'&&state==='playing')useMed();if(k==='r'&&state==='playing'&&player.ammo<12)reload();});
+  $('startButton').addEventListener('click',begin);
+  $('skipCinematic').addEventListener('click',finishCinematic);
+  $('introCinematic').addEventListener('pointerup',e=>{if(e.target.id!=='skipCinematic')finishCinematic()});
+  $('briefContinue').addEventListener('click',enterGame);
+  ui.brief.addEventListener('pointerup',enterGame);
+  $('resumeButton').addEventListener('click',()=>{state='playing';ui.pause.classList.add('hidden');last=performance.now()});
+  $('restartButton').addEventListener('click',restart);
+  window.addEventListener('keydown',e=>{const k=e.key.toLowerCase();input.keys.add(k);if([' ','arrowup','arrowdown','arrowleft','arrowright'].includes(k))e.preventDefault();if(k==='escape')pauseGame();if((k===' '||k==='enter')&&state==='cinematic')finishCinematic();if((k===' '||k==='enter')&&state==='brief')enterGame();if(k==='e'&&state==='playing')interact();if(k==='q'&&state==='playing')useMed();if(k==='r'&&state==='playing'&&player.ammo<12)reload();});
   window.addEventListener('keyup',e=>input.keys.delete(e.key.toLowerCase()));window.addEventListener('blur',()=>{input.keys.clear();input.touch.clear();input.mouse.down=false;input.mobileFire=false});
   canvas.addEventListener('pointermove',e=>{const r=canvas.getBoundingClientRect();input.mouse.x=(e.clientX-r.left)/r.width*W;input.mouse.y=(e.clientY-r.top)/r.height*H;ui.aim.style.left=`${e.clientX-r.left}px`;ui.aim.style.top=`${e.clientY-r.top}px`});
   canvas.addEventListener('pointerdown',e=>{if(state!=='playing')return;input.mouse.down=true;canvas.setPointerCapture?.(e.pointerId)});window.addEventListener('pointerup',()=>input.mouse.down=false);
@@ -79,7 +88,7 @@
     if((input.keys.has(' ')||input.keys.has('w')||input.keys.has('arrowup')||input.touch.has('up'))&&player.grounded){player.vy=-520;player.grounded=false;sound(130,.05,'sine',.01)}
     player.vy+=1450*dt;player.x=clamp(player.x+player.vx*dt,0,WORLD-player.w);player.y+=player.vy*dt;if(player.y+player.h>=FLOOR){player.y=FLOOR-player.h;player.vy=0;player.grounded=true}
     if((input.mouse.down||input.mobileFire)&&state==='playing')shoot();
-    const cameraAnchor=(W*.36-sceneOffsetX)/sceneZoom;cam=clamp(player.x-cameraAnchor,0,WORLD-viewW);if(cam>780&&player.x<1100)ui.sector.textContent='PASILLO DE SERVICIO';else{const t=[...terminals].reverse().find(a=>player.x>a.x-280);ui.sector.textContent=t?.sector||'ESCLUSA 01'}
+    const cameraAnchor=(W*.36-sceneOffsetX)/sceneZoom;cam=clamp(player.x-cameraAnchor,0,WORLD-viewW+sceneOffsetX/sceneZoom);if(cam>780&&player.x<1100)ui.sector.textContent='PASILLO DE SERVICIO';else{const t=[...terminals].reverse().find(a=>player.x>a.x-280);ui.sector.textContent=t?.sector||'ESCLUSA 01'}
     const near=currentTerminal();ui.prompt.classList.toggle('hidden',!near);if(near)ui.prompt.querySelector('span').textContent=`${near.label}  //  E`;
     if(relay&&cores<3&&Math.random()<dt*.12&&enemies.filter(e=>e.hp>0).length<5&&player.x>650)spawnEnemy(player.x+rand(350,620));
     for(const e of enemies){if(e.hp<=0)continue;e.phase+=dt*5;e.attack-=dt;e.flash=Math.max(0,e.flash-dt);const dx=(player.x-e.x),dist=Math.abs(dx);e.dir=Math.sign(dx)||1;const speed=e.type==='crawler'?85:e.type==='brute'?64:100;if(dist>43)e.x+=e.dir*speed*dt;if(dist<53&&e.attack<=0){damagePlayer(e.type==='brute'?20:12);e.attack=e.type==='brute'?1.1:.85}if(e.x<cam-100||e.x>cam+viewW+100){if(dist>700)e.hp=0}}
