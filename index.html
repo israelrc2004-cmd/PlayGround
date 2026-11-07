@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#070b12" />
+  <title>ECOS DE ÍO — Survival</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main id="game-shell" aria-label="Ecos de Ío, juego de supervivencia espacial">
+    <canvas id="game" aria-label="Partida de Ecos de Ío"></canvas>
+    <div class="scanlines" aria-hidden="true"></div>
+    <header id="topline"><span class="brand-mark">E<span>·</span>I</span><span class="top-caption">ARCHIVO DE MISIÓN <b>09 / 17</b></span><button id="sound-toggle" class="sound" aria-label="Activar o silenciar sonido">◖))</button></header>
+    <section id="menu" class="screen visible">
+      <div class="menu-copy"><div class="eyebrow"><span class="live-dot"></span> SEÑAL DE EMERGENCIA · ÍO-7</div><h1>ECOS<br><em>DE ÍO</em></h1><p class="tagline">La estación no está vacía.</p><button id="start" class="primary">INICIAR DESCENSO <span>↗</span></button><div class="menu-foot">UN JUEGO DE SUPERVIVENCIA <i>·</i> 2189</div></div>
+      <div class="menu-note"><span>ÚLTIMO MENSAJE RECIBIDO</span><p>«No abran la compuerta<br>de cuarentena.»</p><small>CAP. M. VEGA — 03:17 UTC</small></div>
+    </section>
+    <section id="intro" class="screen" aria-live="polite"><div class="intro-top"><span>REGISTRO DE VUELO // CONFIDENCIAL</span><span>ÍO-7 · 2189</span></div><div class="story-window"><div id="story-text" class="story-text"></div></div><button id="skip-intro" class="skip">OMITIR TRANSMISIÓN <span>↗</span></button></section>
+    <div id="game-ui" class="game-ui">
+      <div class="hud-left"><div class="objective-kicker">OBJETIVO ACTUAL</div><div id="objective">ENCUENTRA EL ORIGEN</div><div class="health-row"><span>INTEGRIDAD</span><div class="health-track"><i id="health-fill"></i></div><b id="health-value">100</b></div></div>
+      <div class="hud-right"><div class="room-label"><span class="room-pip"></span><span id="room-name">HANGAR</span></div><div class="depth">NIVEL 04 <span>·</span> NAVE <b>ÍO-7</b></div></div>
+      <div id="toast" class="toast"></div>
+      <div class="touch-controls" aria-label="Controles táctiles">
+        <div class="move-pad"><button data-control="left" aria-label="Mover a la izquierda">←</button><button data-control="right" aria-label="Mover a la derecha">→</button></div>
+        <div class="action-pad"><button data-control="interact" class="interact" aria-label="Interactuar">E<span>USAR</span></button><button data-control="jump" class="jump" aria-label="Saltar">↑<span>SALTAR</span></button><button data-control="attack" class="attack" aria-label="Atacar">✳<span>PULSO</span></button></div>
+      </div>
+      <div class="desktop-hint">A / D MOVER <i>·</i> ESPACIO SALTAR <i>·</i> F PULSO <i>·</i> E INTERACTUAR</div>
+    </div>
+    <section id="end-screen" class="screen"><div class="end-card"><div class="eyebrow">SEÑAL DE TRANSMISIÓN RESTAURADA</div><h2 id="end-title">NO ESTÁS A SALVO</h2><p id="end-copy"></p><button id="replay" class="primary">VOLVER A INTENTAR <span>↗</span></button></div></section>
+    <div id="subtitle" class="subtitle"></div>
+  </main>
+  <script src="game.js"></script>
+</body>
+</html>
