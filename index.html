@@ -11,7 +11,7 @@
   <main id="game-shell" aria-label="Ecos de Ío, juego de supervivencia espacial">
     <canvas id="game" aria-label="Partida de Ecos de Ío"></canvas>
     <div class="scanlines" aria-hidden="true"></div>
-    <header id="topline"><span class="brand-mark">E<span>·</span>I</span><span class="top-caption">ARCHIVO DE MISIÓN <b>09 / 17</b></span><button id="sound-toggle" class="sound" aria-label="Activar o silenciar sonido">◖))</button></header>
+    <header id="topline"><span class="brand-mark">E<span>·</span>I</span><span class="top-caption">ARCHIVO DE MISIÓN <b>09 / 17</b></span><div class="top-actions"><button id="pause-toggle" class="sound pause-toggle" aria-label="Pausar partida" title="Pausar (Esc / P)">Ⅱ</button><button id="sound-toggle" class="sound" aria-label="Activar o silenciar sonido">◖))</button></div></header>
     <section id="menu" class="screen visible">
       <div class="menu-copy"><div class="eyebrow"><span class="live-dot"></span> SEÑAL DE EMERGENCIA · ÍO-7</div><h1>ECOS<br><em>DE ÍO</em></h1><p class="tagline">La estación no está vacía.</p><button id="start" class="primary">INICIAR DESCENSO <span>↗</span></button><div class="menu-foot">UN JUEGO DE SUPERVIVENCIA <i>·</i> 2189</div></div>
       <div class="menu-note"><span>ÚLTIMO MENSAJE RECIBIDO</span><p>«No abran la compuerta<br>de cuarentena.»</p><small>CAP. M. VEGA — 03:17 UTC</small></div>
@@ -27,6 +27,7 @@
       </div>
       <div class="desktop-hint">A / D MOVER <i>·</i> ESPACIO SALTAR <i>·</i> F PULSO <i>·</i> E INTERACTUAR</div>
     </div>
+    <section id="pause-screen" class="screen"><div class="end-card"><div class="eyebrow">TRANSMISIÓN EN ESPERA</div><h2>PARTIDA<br><em>EN PAUSA</em></h2><p>La estación sigue ahí fuera. Tómate un momento.</p><button id="resume" class="primary">CONTINUAR <span>↗</span></button><button id="pause-restart" class="secondary">REINICIAR DESDE EL PRINCIPIO</button></div></section>
     <section id="end-screen" class="screen"><div class="end-card"><div class="eyebrow">SEÑAL DE TRANSMISIÓN RESTAURADA</div><h2 id="end-title">NO ESTÁS A SALVO</h2><p id="end-copy"></p><button id="replay" class="primary">VOLVER A INTENTAR <span>↗</span></button></div></section>
     <div id="subtitle" class="subtitle"></div>
   </main>
