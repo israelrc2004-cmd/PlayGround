@@ -24,6 +24,7 @@
 .cinematic-progress i{display:block;width:0;height:100%;background:var(--cyan);box-shadow:0 0 9px var(--cyan);animation:crawl-progress 42s linear forwards}
 @keyframes crawl-progress{to{width:100%}}
 @media(max-width:700px){.opening-crawl{width:86%;font-size:clamp(15px,3.8vw,21px);line-height:1.5}.opening-crawl .crawl-label{font-size:9px}.opening-crawl h2{font-size:clamp(44px,11vw,68px)}.skip-cinematic{top:3%;right:4%;min-height:36px;padding:0 10px;font-size:8px}.intro-vignette{background:linear-gradient(180deg,#05080d 0%,transparent 14%,transparent 80%,#05080d 100%),radial-gradient(ellipse at center,transparent 30%,rgba(0,0,0,.68) 100%)}}
+@media(max-width:700px){.briefing{touch-action:manipulation}.brief-card .text-button{min-height:54px;padding:0 18px;margin-top:12px;border:1px solid rgba(123,201,194,.58);background:rgba(22,39,42,.7);font-size:11px;letter-spacing:.14em}.brief-card .text-button span{margin-left:12px}}
 @media(prefers-reduced-motion:reduce){.opening-crawl{animation-duration:12s}.cinematic-progress i{animation-duration:12s}.screen{transition-duration:.2s}}
 
 /* Cleaner title screen and phone-first touch controls. */
