@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover" />
+  <meta name="theme-color" content="#171d1a" />
+  <title>Polvo y Promesas — una aventura del oeste</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <main class="game-shell" id="gameShell">
+    <canvas id="game" width="480" height="270" aria-label="Juego de vaqueros en el desierto"></canvas>
+    <div class="vignette" aria-hidden="true"></div>
+    <header class="topbar" id="topbar">
+      <div class="brand"><span class="brand-mark">✦</span><span>POLVO <i>Y</i> PROMESAS</span></div>
+      <div class="chapter">CAPÍTULO I <span>·</span> LA CAMPANA HUECA</div>
+      <button class="icon-btn" id="soundBtn" aria-label="Activar o silenciar sonido" title="Sonido">♫</button>
+    </header>
+    <section class="hud hidden" id="hud" aria-live="polite">
+      <div class="hud-card health-card"><span class="micro-label">ÁNIMO</span><div class="hearts" id="hearts"></div></div>
+      <div class="hud-card objective-card"><span class="micro-label">TU RUMBO</span><strong id="objective">Encuentra las tres cartas</strong><div class="progress-line"><span id="progress"></span></div></div>
+      <div class="hud-card ammo-card"><span class="micro-label">CARTUCHOS</span><strong>∞ <small>COLT</small></strong></div>
+    </section>
+    <div class="toast hidden" id="toast"></div>
+    <section class="screen title-screen" id="titleScreen">
+      <div class="title-copy">
+        <p class="eyebrow"><span></span> UNA AVENTURA DEL OESTE <span></span></p>
+        <h1>POLVO <em>&</em><br />PROMESAS</h1>
+        <p class="tagline">La frontera no olvida. Tampoco perdona.</p>
+        <button class="primary-btn" id="startBtn"><span>COMENZAR VIAJE</span><b>→</b></button>
+        <p class="small-hint">WASD / FLECHAS · RATÓN / ESPACIO · MANDO</p>
+      </div>
+      <div class="title-stamp"><span>FRONTERA<br />SALVAJE</span><b>EST. 1887</b></div>
+      <div class="title-foot"><span>© 1887 · TERRITORIO SIN LEY</span><span>UN CUENTO DE RED ROCK</span></div>
+    </section>
+    <section class="screen story-screen hidden" id="storyScreen">
+      <div class="cinema-bars top"></div><div class="cinema-bars bottom"></div>
+      <div class="story-card"><div class="story-kicker" id="storyKicker">RED ROCK, TERRITORIO DE ARIZONA</div><div class="story-text" id="storyText"></div><div class="story-bottom"><span id="storyCount">01 / 03</span><button class="text-btn" id="storyNext">CONTINUAR <b>→</b></button></div></div>
+    </section>
+    <section class="screen pause-screen hidden" id="pauseScreen"><div class="pause-panel"><p class="eyebrow">EL DESIERTO ESPERA</p><h2>PAUSA</h2><p>Respira. El polvo siempre vuelve a asentarse.</p><button class="primary-btn" id="resumeBtn"><span>VOLVER AL CAMINO</span><b>→</b></button><button class="text-btn restart-btn" id="restartBtn">EMPEZAR DE NUEVO</button></div></section>
+    <section class="screen end-screen hidden" id="endScreen"><div class="end-panel"><p class="eyebrow">RED ROCK · ÚLTIMO ATARDECER</p><h2 id="endTitle">LA CAMPANA<br /><em>VUELVE A SONAR</em></h2><p id="endCopy">El pueblo recuerda tu nombre.</p><button class="primary-btn" id="againBtn"><span>VOLVER A JUGAR</span><b>↻</b></button></div></section>
+    <div class="touch-controls hidden" id="touchControls">
+      <div class="stick-zone" id="stickZone"><div class="stick-base"><div class="stick-knob" id="stickKnob"></div></div><span>MOVER</span></div>
+      <div class="touch-actions"><button class="touch-btn shoot-touch" id="shootTouch"><span>✦</span><small>DISPARAR</small></button><button class="touch-btn interact-touch" id="interactTouch"><span>↟</span><small>ACCIÓN</small></button></div>
+    </div>
+    <div class="controls-tip hidden" id="controlsTip">WASD / ↑↓←→ MOVER <i>·</i> CLIC / ESPACIO DISPARAR <i>·</i> E INTERACTUAR <i>·</i> ESC PAUSA</div>
+    <div class="fade-layer" id="fadeLayer"></div>
+  </main>
+  <script src="game.js"></script>
+</body>
+</html>
